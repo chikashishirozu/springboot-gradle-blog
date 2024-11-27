@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .blog-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .post-actions {
+            margin-top: 10px;
+        }
+        .post-actions a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        .post-actions a:hover {
+            color: #388E3C;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/admin/dashboard">Back to Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="home-container">
+        <h1>Blog Posts</h1>
+        <ul>
+            <li th:each="post : ${posts}">
+                <!-- Blog post title with a link to the detailed post page -->
+                <a th:href="@{/blog/{id}(id=${post.id})}">
+                    <span th:text="${post.title}"></span>
+                </a>
+
+                <!-- Edit and Delete buttons for each post -->
+                <div class="post-actions">
+                    <a th:href="@{/post/edit/{id}(id=${post.id})}">Edit</a>
+                    <a th:href="@{/post/delete/{id}(id=${post.id})}">Delete</a>
+                </div>
+            </li>
+            <!-- Display a message if no posts exist -->
+            <li th:if="${#lists.isEmpty(posts)}">No posts yet.</li>
+        </ul>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <link rel="shortcut icon" type="image/ico" href="../static/images/favicon.ico">
+    <style>
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Navigation links */
+header {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.nav-links {
+    list-style-type: none;
+}
+
+.nav-links li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.nav-links li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links li a:hover {
+    text-decoration: underline;
+    color: red;
+}
+
+/* Logo styling */
+.logo-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+.logo {
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/">Documentation</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="logo-container">
+        <img src="../static/images/logo.png" alt="Blog Logo" class="logo">
+    </div>
+</body>
+</html>
+
+
+
