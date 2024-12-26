@@ -1,4 +1,9 @@
 -- V4__Consolidated_migration.sql
+DROP TABLE posts;
+
+DROP TABLE roles;
+
+DROP TABLE users CASCADE;
 
 -- ユーザーテーブルの作成
 CREATE TABLE users (
@@ -38,18 +43,5 @@ CREATE TABLE user_roles (
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
--- 既存テーブルに対して updated_at カラムを追加する場合は、以下のように ALTER TABLE を使います
-
--- ユーザーテーブルに updated_at カラムを追加する
-ALTER TABLE users
-ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
--- ポストテーブルに updated_at カラムを追加する
-ALTER TABLE posts
-ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
--- roles テーブルに updated_at カラムを追加する
-ALTER TABLE roles
-ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 
