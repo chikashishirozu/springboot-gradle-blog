@@ -10,6 +10,34 @@ bash
 
 ./gradlew clean build --no-build-cache
 
+# Gradle における「依存関係修理」コマンド
+
+bash
+
+./gradlew build --refresh-dependencies
+
+# 不要依存を検出する（整理の核心）
+
+プラグイン使用（定番）
+
+plugins {
+    id "com.autonomousapps.dependency-analysis" version "1.32.0"
+}
+
+実行
+
+./gradlew buildHealth
+
+結果
+
+使ってない依存
+
+testにしか要らない依存
+
+直接依存にすべきもの
+
+👉 「削除候補リスト」を自動生成
+
 # 実行コマンド例
 
 bash
