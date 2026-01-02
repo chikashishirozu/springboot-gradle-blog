@@ -1,0 +1,63 @@
+# application.properties
+# 共通設定（ロギングやJPAの共通設定など）
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=none  # 本番環境ではスキーマを自動生成しない
+
+# 管理サービスの設定
+management.endpoints.web.exposure.include=health,info
+
+# エラーハンドリング
+server.error.path=/error
+
+# サーバーポート
+server.port=8080
+
+# プロファイルの設定（本番環境用）
+spring.profiles.active=prod  # 本番環境用プロファイルを指定
+
+# H2データベースのURL
+spring.datasource.url=jdbc:h2:tcp://localhost/~/testdb;AUTO_SERVER=TRUE
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# H2コンソールを有効化
+spring.h2.console.enabled=false
+
+# PostgreSQL設定（ポート5432）
+spring.datasource.url=jdbc:postgresql://localhost:5432/testdb
+spring.datasource.username=testuser
+spring.datasource.password=testpassword
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+# H2 Consoleを無効化（PostgreSQL使用時）
+spring.h2.console.enabled=false
+
+# JPA設定
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+
+# Hibernateの設定
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=none  # 本番ではスキーマを更新しない設定
+
+# Flywayの設定（データベースマイグレーション管理）
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
+spring.flyway.user=produser
+spring.flyway.password=prodpassword
+spring.flyway.baseline-on-migrate=true
+
+# ロギング設定
+logging.level.org.springframework=INFO
+logging.level.com.example=INFO
+
+# サーバーポート（本番環境用）
+server.port=8080
+
+
+

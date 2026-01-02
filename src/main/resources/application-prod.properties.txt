@@ -1,0 +1,6 @@
+# application-prod.properties を作成し、本番用DBに変更
+  spring.datasource.url=jdbc:postgresql://localhost:5432/blogdb
+  spring.datasource.username=${DB_USERNAME}
+  spring.datasource.password=${DB_PASSWORD}
+  
+  spring.h2.console.enabled=false

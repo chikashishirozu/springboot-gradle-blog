@@ -1,0 +1,57 @@
+# アプリケーション基本設定
+spring.application.name=blog
+server.port=8080
+
+# データベース設定（H2 - 開発環境）
+spring.datasource.url=jdbc:h2:file:./data/blogdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# JPA設定
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
+
+# H2 Console設定（開発環境のみ）
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+spring.h2.console.settings.web-allow-others=false
+
+# Flyway設定
+spring.flyway.enabled=true
+spring.flyway.baseline-on-migrate=true
+spring.flyway.locations=classpath:db/migration
+
+# セキュリティ設定
+spring.security.user.name=admin
+spring.security.user.password=admin
+
+# Thymeleaf設定
+spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+
+# ログ設定
+logging.level.root=INFO
+logging.level.com.example.blog=DEBUG
+logging.level.org.springframework.security=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# エラーページ設定
+server.error.include-message=always
+server.error.include-binding-errors=always
+server.error.include-stacktrace=on_param
+server.error.include-exception=false
+
+# ファイルアップロード設定
+spring.servlet.multipart.max-file-size=5MB
+spring.servlet.multipart.max-request-size=5MB
+
+# セッション設定
+server.servlet.session.timeout=30m
+server.servlet.session.cookie.http-only=true
+server.servlet.session.cookie.secure=false
+# 本番環境では server.servlet.session.cookie.secure=true に変更
