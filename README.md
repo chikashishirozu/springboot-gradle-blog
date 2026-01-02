@@ -1,4 +1,27 @@
 # springboot-gradle-blog
+
+# キャッシュをクリアして再ビルド
+
+時にはキャッシュが原因でエラーが発生することがあります。
+
+次のコマンドでキャッシュをクリアし、再ビルドを試してみてください。
+
+bash
+
+./gradlew clean build --no-build-cache
+
+# 実行コマンド例
+
+bash
+
+./gradlew bootRun
+
+java -jar build/libs/xxxx.jar
+
+
+⚠️ All users, emails, and passwords are dummy values.
+⚠️ This SQL file is for local development only.
+
 この設計図を各レイヤーごとに詳しく解説します。
 
 📋 全体アーキテクチャ
