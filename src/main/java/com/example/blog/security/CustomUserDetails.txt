@@ -1,0 +1,67 @@
+package com.example.demo.security;
+
+import com.example.demo.entity.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+public class CustomUserDetails implements UserDetails {
+
+    private final User user;
+
+    public CustomUserDetails(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // ロールを "ROLE_ADMIN" や "ROLE_USER" 形式に変換
+        String role = user.getRole();
+        if (role != null && !role.startsWith("ROLE_")) {
+            role = "ROLE_" + role;
+        }
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // アカウント期限切れ機能がない場合はtrue
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // Userエンティティにlocked/isLockedフィールドがある場合
+        // return !user.isLocked();
+        return true; // ない場合はtrue
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // パスワード期限切れ機能がない場合はtrue
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Userエンティティにenabled/isEnabledフィールドがある場合
+        // return user.isEnabled();
+        return true; // ない場合はtrue
+    }
+
+    // 元のUserエンティティを取得するメソッド（必要に応じて）
+    public User getUser() {
+        return user;
+    }
+}
