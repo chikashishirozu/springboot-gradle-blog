@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/images/favicon.png}">
     <title>Login</title>
     <style>
         body {
@@ -58,15 +59,33 @@
 <body>
     <div class="login-container">
         <h1>Login</h1>
-        <form action="/login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br>      
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-            <button type="submit">Login</button>
+        
+        <!-- エラーメッセージ表示 -->
+        <div th:if="${param.error}" class="alert alert-error">
+            Invalid username or password.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            You have been logged out.
+        </div>        
+        
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit">Login</button>    
+
         </form>
         <div class="register-link">
-            <p>まだ登録していない方は、<a href="/register">こちら</a>から登録してください。</p>
+            <p>まだ登録していない方は、<a th:href="@{/register}">こちら</a>から登録してください。</p>
         </div>
     </div>
 </body>
