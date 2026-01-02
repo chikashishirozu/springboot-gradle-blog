@@ -1,15 +1,14 @@
 package com.example.blog;
 
+import com.example.blog.entity.Post;
+import com.example.blog.repository.PostRepository;
+import com.example.blog.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.example.blog"})
 public class BlogApplication {
 
     public static void main(String[] args) {
@@ -19,7 +18,8 @@ public class BlogApplication {
     @Bean
     public CommandLineRunner demo(PostRepository postRepository, UserRepository userRepository) {
         return (args) -> {
-            // アプリケーション起動時に実行されるコード
+            // データベースに初期データを投入するコードをここに記述
+            System.out.println("アプリケーションが起動しました");
         };
     }
 }

@@ -1,18 +1,19 @@
 package com.example.blog;
 
+import com.example.blog.entity.User;
+import com.example.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -22,12 +23,6 @@ public class UserController {
     public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-        return "register";
     }
 
     @PostMapping("/register")
@@ -44,54 +39,43 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            User user = userRepository.findById(uuid)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-            return ResponseEntity.ok(user);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        Optional<User> user = userRepository.findById(UUID.fromString(id));
+        return user.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        try {
-            User createdUser = userRepository.save(user);
-            return ResponseEntity.ok(createdUser);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User userDetails) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            User user = userRepository.findById(uuid)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-
+        Optional<User> userOptional = userRepository.findById(UUID.fromString(id));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
             user.setUsername(userDetails.getUsername());
             user.setEmail(userDetails.getEmail());
-            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-            final User updatedUser = userRepository.save(user);
+            if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+            }
+            User updatedUser = userRepository.save(user);
             return ResponseEntity.ok(updatedUser);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        try {
-            UUID uuid = UUID.fromString(id);
-            User user = userRepository.findById(uuid)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-            userRepository.delete(user);
+        UUID uuid = UUID.fromString(id);
+        if (userRepository.existsById(uuid)) {
+            userRepository.deleteById(uuid);
             return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
-

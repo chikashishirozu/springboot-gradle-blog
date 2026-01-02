@@ -1,49 +1,52 @@
+package com.example.blog;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; // 変更
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import com.example.blog.UserRepository;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true) 
+@EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/api/v1/posts").permitAll()
+            // 認可設定
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/home", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             )
+            
+            // フォームログイン設定
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/admin/dashboard", true) // Redirect to dashboard on successful login
+                .defaultSuccessUrl("/", true)
                 .permitAll()
             )
+            
+            // ログアウト設定
             .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
+            
+            // CSRF設定（H2コンソールのため一部無効化）
             .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .ignoringRequestMatchers("/h2-console/**")
+            )
+            
+            // H2コンソールのフレーム表示許可
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
             );
-        return http.build();
-    }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        return http.build();
     }
 
     @Bean
@@ -51,6 +54,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
-
-
