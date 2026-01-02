@@ -1,0 +1,72 @@
+package com.example.blog;
+
+import com.example.blog.repository.UserRepository;
+import com.example.blog.entity.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.List;
+
+@Controller
+public class AuthController {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthController(UserRepository userRepository,
+                          PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String loginPost() {
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/login?logout";
+    }
+    
+    // 登録ページ表示
+    @GetMapping("/register")
+    public String showRegistrationForm() {
+        return "register";  // register.htmlを表示
+    }
+    
+    // 登録処理
+    // AuthController.java - registerメソッドのみ修正
+    @PostMapping("/register")
+    public String register(@ModelAttribute User user) {
+        System.out.println("Register attempt for: " + user.getUsername());
+        
+        // パスワードをエンコード
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
+        // ★ rolesを設定（Listとして設定）
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of("ROLE_USER"));
+        }
+        
+        // ★ 必須フィールドを設定（デフォルトコンストラクタで設定済みだが念のため）
+        user.setEnabled(true);
+        user.setAccountNonLocked(true);
+        
+        try {
+            userRepository.save(user);
+            System.out.println("User saved successfully: " + user.getUsername());
+        } catch (Exception e) {
+            System.err.println("Error saving user: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/register?error";
+        }
+        
+        return "redirect:/login?registered";
+    }
+}
