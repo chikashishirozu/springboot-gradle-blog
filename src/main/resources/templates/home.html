@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Home</title>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/images/favicon.png}">
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Navigation links */
+        header {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex; 
+            align-items: center; 
+            gap: 15px;    
+        }
+
+        .nav-links {
+            list-style-type: none;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-links li {
+            display: inline;
+        }
+
+        .nav-links li a {
+            color: navy;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links li a:hover {
+            background-color: rgba(0, 0, 139, 0.1);
+            text-decoration: underline;
+            color: red;
+        }
+
+        /* ✅ Logoutリンクのスタイル（赤色） */
+        .nav-links li a.logout-link {
+            color: #dc3545;
+        }
+
+        .nav-links li a.logout-link:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #c82333;
+        }
+
+        /* ✅ ユーザー名表示 */
+        .username-display {
+            color: navy;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Logo styling */
+        .logo-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        /* ✅ 非表示用のログアウトフォーム */
+        .hidden-logout-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- ✅ 未ログインユーザー向けナビゲーション -->
+        <nav sec:authorize="!isAuthenticated()">
+            <ul class="nav-links">
+                <li><a th:href="@{/login}">Login</a></li>
+                <li><a th:href="@{/register}">Register</a></li>
+                <li><a th:href="@{https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/}">Documentation</a></li>
+            </ul>
+        </nav>
+        
+        <!-- ✅ ログイン済みユーザー向けナビゲーション -->
+        <nav sec:authorize="isAuthenticated()">
+            <ul class="nav-links">
+                <!-- ユーザー名表示 -->
+                <li>
+                    <span class="username-display">
+                        Welcome, <span sec:authentication="name">User</span>!
+                    </span>
+                </li>
+                <!-- 記事一覧へのリンク -->
+                <li><a th:href="@{/posts}">Posts</a></li>
+                <!-- 管理者のみ表示 -->
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin}">Admin</a>
+                </li>
+                <li><a th:href="@{https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/}">Documentation</a></li>
+                <!-- ✅ Logoutリンク（JavaScriptでフォーム送信） -->
+                <li>
+                    <a href="#" class="logout-link" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- ✅ 非表示のログアウトフォーム -->
+    <form id="logoutForm" class="hidden-logout-form" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    </form>
+    
+    <div class="logo-container">
+        <img th:src="@{/images/logo.png}" alt="Blog Logo" class="logo">
+    </div>
+</body>
+</html>
+
+
+
