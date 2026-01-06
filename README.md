@@ -8,7 +8,53 @@ sudo alternatives --config java
 
 または、
 
-sudo dnf install sdkman
+正しい SDKMAN のインストール方法（公式）
+
+SDKMAN は curl で入れるのが唯一の正解 です。
+
+✅ 1️⃣ 必要なもの（ほぼ入っている）
+
+sudo dnf install curl zip unzip
+
+✅ 2️⃣ SDKMAN をインストール
+
+curl -s "https://get.sdkman.io" | bash
+
+✅ 3️⃣ shell を再読み込み
+
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+または新しいターミナルを開く。
+
+✅ 4️⃣ 動作確認
+
+sdk version
+
+バージョンが出れば成功。
+
+なぜ root（sudo）で入れないのか
+
+🧠 雑学・業界話
+
+SDKMAN は ユーザーごとの環境管理
+
+Java / Gradle / Kotlin のバージョンは
+
+プロジェクトや人ごとに違う
+
+/usr/bin に入れると衝突する
+
+そのため、
+
+「SDKMAN は ~/.sdkman に入る」
+
+という設計になっています。
+
+これは pyenv / nvm / rbenv と同じ思想です。
+
+sdk list
+
+最新のJavaを確認後インストール
 
 sdk install java 21.0.9-tem
 
@@ -16,11 +62,12 @@ sdk use java 21.0.9-tem
 
 SDKMAN! の PATH が bashrc で下の方にある
 
-alternatives の JDK が使われている場合、
+# alternatives の JDK が使われている場合、
 
 👉 対策：bashrc の SDKMAN 設定を一番最後に移動する
 
 ✔ 修正手順
+
 nano ~/.bashrc
 
 以下のように 一番下だけに残す：
