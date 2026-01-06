@@ -34,6 +34,8 @@ sudo setsebool -P container_connect_any 1
 
 sudo semanage port -a -t http_port_t -p tcp 5050
 
+http://localhost:5050　を確認
+
 # キャッシュをクリアして再ビルド
 
 時にはキャッシュが原因でエラーが発生することがあります。
