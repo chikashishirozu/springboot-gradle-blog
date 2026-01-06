@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    container_name: springboot-postgres
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_DB: testdb
+      POSTGRES_PASSWORD: testpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - blog-network
+
+  # アプリケーションコンテナ（オプション）
+  # app:
+  #   build: .
+  #   container_name: springboot-app
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blogdb
+  #     SPRING_DATASOURCE_USERNAME: bloguser
+  #     SPRING_DATASOURCE_PASSWORD: blogpass123
+  #   networks:
+  #     - blog-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  blog-network:
+    driver: bridge

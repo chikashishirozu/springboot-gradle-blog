@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    container_name: blog-postgres-dev
+    environment:
+      POSTGRES_USER: blog_dev_user
+      POSTGRES_DB: blog_dev
+      POSTGRES_PASSWORD: dev_password_123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blog_dev_user -d blog_dev"]
+      #                                                 ^^^^^^^^^^^^
+      #                                    データベース名を追加！
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blog-dev-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: blog-pgadmin-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - blog-dev-network
+
+volumes:
+  postgres_dev_data:
+    driver: local
+
+networks:
+  blog-dev-network:
+    driver: bridge
