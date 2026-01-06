@@ -143,6 +143,10 @@ docker compose up -d
 
 docker ps
 
+# テスト時
+
+docker compose -f docker-compose.yml -f docker-compose-test.yml up
+
 # SELinux がコンテナの Web アクセスをブロックしている（Fedoraあるある）
 
 getenforce が Enforcing なら高確率でこれ。
