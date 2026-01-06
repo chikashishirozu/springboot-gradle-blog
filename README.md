@@ -16,7 +16,7 @@ sdk use java 21.0.9-tem
 
 SDKMAN! の PATH が bashrc で下の方にある
 
-→ 優先されず、alternatives の JDK が使われている
+alternatives の JDK が使われている場合、
 
 👉 対策：bashrc の SDKMAN 設定を一番最後に移動する
 
