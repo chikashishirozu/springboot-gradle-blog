@@ -1,5 +1,42 @@
 # springboot-gradle-blog
 
+# Javaのインストール
+
+sudo dnf install java-21-openjdk java-21-openjdk-devel
+
+sudo alternatives --config java
+
+または、
+
+sudo dnf install sdkman
+
+sdk install java 21.0.9-tem
+
+sdk use java 21.0.9-tem
+
+SDKMAN! の PATH が bashrc で下の方にある
+
+→ 優先されず、alternatives の JDK が使われている
+
+👉 対策：bashrc の SDKMAN 設定を一番最後に移動する
+
+✔ 修正手順
+nano ~/.bashrc
+
+以下のように 一番下だけに残す：
+
+SDKMAN設定
+
+export SDKMAN_DIR="$HOME/.sdkman"
+
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+
+
+保存したら反映：
+
+source ~/.bashrc
+
+
 # 🧹 コンテナを作り直す
 
 pgAdmin のエラーステータスを解消するため再作成します：
