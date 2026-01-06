@@ -44,6 +44,36 @@ sdk version
 
 なぜ root（sudo）で入れないのか
 
+1. SDKMANをインストール
+
+2. 
+
+bash
+
+curl -s "https://get.sdkman.io" | bash
+
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+3. Gradleをインストール
+
+bash
+
+sdk install gradle
+
+4. インストール確認
+
+bash
+
+gradle --version
+
+5. Gradle Wrapperを生成
+
+bash
+
+cd ~/springboot-gradle-blog-main
+
+gradle wrapper
+
 🧠 雑学・業界話
 
 SDKMAN は ユーザーごとの環境管理
