@@ -1,5 +1,39 @@
 # springboot-gradle-blog
 
+# 🧹 コンテナを作り直す
+
+pgAdmin のエラーステータスを解消するため再作成します：
+
+docker compose down
+
+docker compose up -d
+
+docker ps
+
+# SELinux がコンテナの Web アクセスをブロックしている（Fedoraあるある）
+
+getenforce が Enforcing なら高確率でこれ。
+
+一時的に確認のため無効化：
+
+sudo setenforce 0
+
+SELinuxを元に戻す時
+
+sudo setenforce 1
+
+# SELinux を有効のまま pgAdmin を動かす方法（正攻法）
+
+もし今後「Enforcing のまま動かしたい」なら：
+
+方法A：ポートバインドを許可する
+
+sudo setsebool -P container_connect_any 1
+
+方法B：Podman rootless のポートを明示的に許可
+
+sudo semanage port -a -t http_port_t -p tcp 5050
+
 # キャッシュをクリアして再ビルド
 
 時にはキャッシュが原因でエラーが発生することがあります。
@@ -16,7 +50,19 @@ bash
 
 bash
 
+# 依存関係を再解決
+
+./gradlew dependencies --refresh-dependencies
+
 ./gradlew build --refresh-dependencies
+
+# または全ての依存関係を再ダウンロード
+
+rm -rf ~/.gradle/caches/modules-2/
+
+# オフラインモードで依存関係解決を試す
+
+./gradlew --offline dependencies
 
 # 不要依存を検出する（整理の核心）
 
@@ -43,6 +89,8 @@ testにしか要らない依存
 # 実行コマンド例
 
 bash
+
+./gradlew bootRun --args='--spring.profiles.active=dev'
 
 ./gradlew bootRun
 
