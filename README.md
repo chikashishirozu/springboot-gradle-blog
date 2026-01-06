@@ -103,6 +103,61 @@ rm -rf ~/.gradle/caches/modules-2/
 
 ./gradlew --offline dependencies
 
+本当に必要なもの（実務的）
+
+✅ ① Gradle Wrapper の本体を取得済み
+
+一度オンラインで：
+
+./gradlew --version
+
+これで：
+
+~/.gradle/wrapper/dists/gradle-8.x/
+
+が作られます。
+
+✅ ② 依存関係をすべて事前取得
+
+./gradlew build
+
+または
+
+./gradlew dependencies
+
+これで：
+
+~/.gradle/caches/modules-2/files-2.1/
+
+
+に 全 jar がキャッシュされます。
+
+✅ ③ ここで初めて --offline が意味を持つ
+
+./gradlew --offline build
+
+👉 ネットに一切出ずに成功すれば OK。
+
+4️⃣ 業界話：CI / 社内ネットワーク事情
+
+実務ではよくあります：
+
+社内ネットワークは 外部アクセス禁止
+
+Maven Central 直アクセス不可
+
+プロキシ or ミラー必須
+
+そのため現場では：
+
+一度オンライン環境でキャッシュ
+
+.gradle をアーティファクトとして保存
+
+Docker イメージに焼き込み
+
+という運用が普通です。
+
 # 不要依存を検出する（整理の核心）
 
 プラグイン使用（定番）
