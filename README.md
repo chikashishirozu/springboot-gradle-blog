@@ -1,5 +1,15 @@
 # springboot-gradle-blog
 
+https://start.spring.io/　にアクセスし、✅ 最初の入口
+
+→ Spring Initializr（公式サイト）でプロジェクトを生成・ダウンロード
+
+🔁 その後
+
+→ gradlew を使ってビルド・依存関係取得
+
+→ 慣れてきたら SDKMAN! や IDE 連携に進む
+
 # Javaのインストール
 
 sudo dnf install java-21-openjdk java-21-openjdk-devel
