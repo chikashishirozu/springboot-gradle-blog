@@ -10,6 +10,8 @@ bash
 
 ./gradlew clean build --no-build-cache
 
+./gradlew clean build -x test  # まずはテストなしでビルド
+
 # Gradle における「依存関係修理」コマンド
 
 bash
