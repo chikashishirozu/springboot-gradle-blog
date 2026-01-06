@@ -62,7 +62,7 @@ Java / Gradle / Kotlin のバージョンは
 
 これは pyenv / nvm / rbenv と同じ思想です。
 
-sdk list
+sdk list java
 
 最新のJavaを確認後インストール
 
