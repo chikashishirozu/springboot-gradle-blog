@@ -64,6 +64,15 @@ Java / Gradle / Kotlin のバージョンは
 
 sdk list java
 
+Oracle JDK
+→ ライセンス確認が面倒（個人学習以外）
+
+Zulu / Corretto
+→ クラウド特化用途が多い
+
+Temurin
+→ 学習・個人開発・実務、全部OK
+
 最新のJavaを確認後インストール
 
 sdk install java 21.0.9-tem
