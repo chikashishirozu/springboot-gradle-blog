@@ -141,11 +141,13 @@ docker compose down -v
 
 docker builder prune -f
 
-docker image prune -f
+docker image prune -a -f
 
 docker volume prune -f
 
 docker network prune -f
+
+docker system prune -a --volumes -f
 
 docker compose build --no-cache
 
