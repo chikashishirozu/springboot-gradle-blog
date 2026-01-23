@@ -136,17 +136,30 @@ source ~/.bashrc
 # 🧹 コンテナを作り直す
 
 pgAdmin のエラーステータスを解消するため再作成します：
+```bash
+docker compose down -v
 
-docker compose down
+docker builder prune -f
+
+docker image prune -f
+
+docker volume prune -f
+
+docker network prune -f
+
+docker compose build --no-cache
 
 docker compose up -d
+
+# ログを確認
+docker compose logs -f
 
 docker ps
 
 # テスト時
 
 docker compose -f docker-compose.yml -f docker-compose-test.yml up
-
+```
 # SELinux がコンテナの Web アクセスをブロックしている（Fedoraあるある）
 
 getenforce が Enforcing なら高確率でこれ。
