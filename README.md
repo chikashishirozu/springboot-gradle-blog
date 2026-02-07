@@ -506,3 +506,148 @@ Spring Securityの導入: セキュリティを考慮した設計
 初期データ投入: DataLoaderによる開発環境の整備
 
 RESTful設計: コントローラーが適切に機能分割されている
+
+```mermaid
+flowchart TB
+    subgraph "Client Layer"
+        Browser["Web Browser"]:::client
+    end
+
+    subgraph "Backend Application"
+        subgraph "Initialization"
+            NewBlogApplication["NewBlogApplication"]:::entry
+            Migrations["Flyway Migrations"]:::migration
+        end
+
+        subgraph "Security Module"
+            SecurityConfig["SecurityConfig"]:::security
+        end
+
+        subgraph "Presentation Layer"
+            HomeController["HomeController"]:::controller
+            BlogController["BlogController"]:::controller
+            subgraph "Thymeleaf Templates & Static Assets"
+                Templates["Thymeleaf Templates"]:::template
+                StaticAssets["Static Assets"]:::static
+            end
+        end
+
+        subgraph "Business Logic Layer"
+            BlogService["BlogService"]:::service
+        end
+
+        subgraph "Data Access Layer"
+            BlogRepository["BlogRepository"]:::repository
+            BlogEntity["Blog Entity"]:::model
+        end
+    end
+
+    DB["Database\n(H2 / MySQL)"]:::database
+
+    Browser -->|"HTTP Request"| SecurityConfig
+    SecurityConfig -->|"Authenticated Call"| HomeController
+    SecurityConfig -->|"Authenticated Call"| BlogController
+    HomeController -->|"calls"| BlogService
+    BlogController -->|"calls"| BlogService
+    BlogService -->|"uses"| BlogRepository
+    BlogRepository -->|"CRUD Operations"| DB
+    Migrations -->|"applies migrations"| DB
+    NewBlogApplication -->|"bootstraps"| Migrations
+    NewBlogApplication -->|"bootstraps"| SecurityConfig
+    NewBlogApplication -->|"boots controllers"| HomeController
+    NewBlogApplication -->|"boots controllers"| BlogController
+    NewBlogApplication -->|"boots services"| BlogService
+    NewBlogApplication -->|"boots repositories"| BlogRepository
+    HomeController -->|"renders"| Templates
+    BlogController -->|"renders"| Templates
+    Templates -->|"served to"| Browser
+    StaticAssets -->|"served to"| Browser
+
+    click NewBlogApplication "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/NewBlogApplication.java"
+    click SecurityConfig "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/config/SecurityConfig.java"
+    click HomeController "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/controller/HomeController.java"
+    click BlogController "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/controller/BlogController.java"
+    click BlogService "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/service/BlogService.java"
+    click BlogRepository "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/repository/BlogRepository.java"
+    click BlogEntity "https://github.com/chikashishirozu/springboot-gradle-new_blog/blob/main/src/main/java/com/example/new_blog/model/Blog.java"
+    click Migrations "https://github.com/chikashishirozu/springboot-gradle-new_blog/tree/main/src/main/resources/db/migration"
+    click Templates "https://github.com/chikashishirozu/springboot-gradle-new_blog/tree/main/src/main/resources/templates"
+    click StaticAssets "https://github.com/chikashishirozu/springboot-gradle-new_blog/tree/main/src/main/resources/static/"
+
+    classDef client fill:#E8F1FF,stroke:#0366D6
+    classDef entry fill:#DDEBDC,stroke:#1E6441
+    classDef security fill:#FFF5CC,stroke:#BF8B00
+    classDef controller fill:#D6E8FC,stroke:#1C7ED6
+    classDef template fill:#E6FFFA,stroke:#1CA678
+    classDef static fill:#FFF0F3,stroke:#D6336C
+    classDef service fill:#FFF4E6,stroke:#F76707
+    classDef repository fill:#E8F5E9,stroke:#2E7D32
+    classDef model fill:#EDE7F6,stroke:#5E35B1
+    classDef database fill:#E8EAF6,stroke:#3949AB
+    classDef migration fill:#FFF3E0,stroke:#EF6C00
+    subgraph "Edge Layer (Zero Trust)"
+        LB[Load Balancer<br/>- mTLS必須<br/>- DDoS防護]
+        WAF[Web Application Firewall<br/>- ボット検知<br/>- AI脅威検知]
+    end
+    
+    subgraph "API Gateway Layer"
+        AG[API Gateway<br/>- GraphQL/REST<br/>- HTMX対応]
+        RL[Rate Limiter<br/>- 適応型制限<br/>- 地域ブロック]
+        AUTH[Auth Router<br/>- 方法自動検出<br/>- デバイス指紋]
+    end
+    
+    subgraph "Application Layer (loco_rs 0.16)"
+        subgraph "Web Routes (Session based)"
+            WEB[Web Controllers<br/>- SSR/HTMX<br/>- CSRF防御]
+        end
+        
+        subgraph "API Routes (JWT/Passkeys)"
+            API[API Controllers<br/>- OpenAPI 3.1<br/>- gRPC対応]
+        end
+        
+        subgraph "Auth Service (Hybrid)"
+            SESS[Session Manager<br/>- Redisクラスタ<br/>- 地理分散]
+            JWT[JWT Service<br/>- DPoP対応<br/>- 鍵ローテーション]
+            PASS[Passkey Service<br/>- FIDO2/WebAuthn<br/>- 生体認証]
+        end
+    end
+    
+    subgraph "Data Layer"
+        PG[(PostgreSQL 18<br/>- 行レベルセキュリティ<br/>- 監査ログ)]
+        RD[(Redis 8<br/>- Redis Stack<br/>- 検索/JSON)]
+        MINIO[(MinIO<br/>- S3互換<br/>- 画像最適化)]
+        CDN[CDN Edge<br/>- 静的資産<br/>- 動的キャッシュ]
+    end
+    
+    subgraph "Observability"
+        OTEL[OpenTelemetry<br/>- 分散トレーシング<br/>- メトリクス/ログ]
+        SIEM[SIEM<br/>- セキュリティ監視<br/>- コンプライアンス]
+        ALERT[Alert Manager<br/>- AI異常検知<br/>- 自動対応]
+    end
+    
+    LB --> WAF
+    WAF --> AG
+    AG --> RL --> AUTH
+    AUTH --> WEB
+    AUTH --> API
+    WEB --> SESS
+    API --> JWT
+    SESS --> RD
+    JWT --> RD
+    WEB --> PG
+    API --> PG
+    WEB --> MINIO
+    API --> MINIO
+    MINIO --> CDN
+    
+    WEB --> OTEL
+    API --> OTEL
+    AUTH --> SIEM
+    OTEL --> ALERT
+    SIEM --> ALERT
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+  
